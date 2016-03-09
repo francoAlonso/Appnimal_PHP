@@ -5,7 +5,6 @@ class Usuario{
 	public $id;
 	private $Habilitado;
 	public $Mail;
-	public $Numero;
 
 	public function getID(){
 		return $this->id;
@@ -15,19 +14,12 @@ class Usuario{
 		return $this->Mail;
 	}
 
-	public function getNumero(){
-		return $this->Numero;
-	}
-
 	public function setMail($newMail){
 		$this->Mail = $newMail;
 	}
 
-	public function setNumero($newNumero){
-		$this->Numero = $newNumero;
-	}
-
 	//funciones para la base de datos:
+
 	public static function obtenerTodos($pdo){
 
 		$params = array();
@@ -57,6 +49,19 @@ class Usuario{
 		
 	}//obtenerPorId
 
+	public static function CrearUsuario($mail, $pdo){
+
+		$params = array(':Mail' => $mail, ':Habilitado' => true);
+		$statement = $pdo -> prepare('
+			INSERT INTO Usuario
+			(Mail, Habilitado)
+			VALUES (:Mail, :Habilitado)');
+		$statement->execute($params);
+		$statement->setFetchMode(PDO::FETCH_CLASS, 'Usuario');
+		return $statement->fetch();
+
+	}//crearUsuario
+
 	public static function Login($mail, $pdo){
 
 		$params = array(':Mail' => $mail);
@@ -68,9 +73,9 @@ class Usuario{
 			LIMIT 0,1');
 		$statement->execute($params);
 		$statement->setFetchMode(PDO::FETCH_CLASS, 'Usuario');
-		return $statement->fech();
+		return $statement->fetch();
 
-	}
+	}//Login
 
 }//usuario
 

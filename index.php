@@ -63,33 +63,35 @@ $app->get('/usuario/:id', function($id) use ($app, $pdo){
 
 });//usuario->id
 
-$app->get('/usuario/login', function() use ($app, $pdo){
+$app->post('/usuario/login', function() use ($app, $pdo) {
 
     try{
-        
         $usuario = null;
-        $respuesta = null;
+        $respuesta = false;
 
-        $respuestaRecibida = json_decode($app->request->getBody());
-        $usuario = UsuarioController::Login ($respuestaRecibida->Mail, $pdo);
+        $datosRecibidos = json_decode($app->request->getBody());
+        $usuario = UsuarioController::Logeo($datosRecibidos->Mail, $pdo);
 
-        if($usuario == null){
+        if ($usuario == null){
             $respuesta = false;
         }else{
             $respuesta = true;
         }
+        
+        echo json_encode(array("Validado" => $respuesta, "Usuario" => $usuario));
 
-
-    }catch(Exception $ex){
+    }
+    
+    catch (Exception $ex){
 
         $app->response->setStatus(500);
         echo $ex->getMessage();
-    }
 
-    echo json_encode( array("Validado"=>$respuesta, "Usuario"=>$usuario));
+    }
 
 });//Login
 
-$app->run(); //empieza los resultados
+
+$app->run(); //corre los resultados
 
 ?>
