@@ -16,6 +16,12 @@ class UsuarioController{
 
 	}//obtenerPorId
 
+	public static function ObtenerPorMail($mail, $pdo){
+
+		$usuario = Usuario::ObtenerPorMail($mail, $pdo);
+		return $usuario;
+	}
+
 	public static function Login($mail, $pdo){
 
 		$usuario = Usuario::Login($mail, $pdo);

@@ -48,6 +48,19 @@ $app->get('/usuario', function () use ($app, $pdo){
 
 });//usuario
 
+$app->get('/usuario/mail/:mail', function($mail) use ($app, $pdo){
+
+    try{
+       // $datosRecibidos = json_decode($app->request->get('Mail'));
+        $usuario = UsuarioController::ObtenerPorMail($mail, $pdo);
+        echo json_encode(array($usuario));
+    }catch(Exception $ex){
+
+        $app->response->setStatus(500);
+        echo $ex->getMessage();
+    }
+});//usuario->mail
+
 $app->get('/usuario/:id', function($id) use ($app, $pdo){
 
     try{
@@ -63,14 +76,14 @@ $app->get('/usuario/:id', function($id) use ($app, $pdo){
 
 });//usuario->id
 
-$app->post('/usuario/login', function() use ($app, $pdo) {
+$app->get('/usuario/login', function() use ($app, $pdo) {
 
     try{
         $usuario = null;
         $respuesta = false;
 
         $datosRecibidos = json_decode($app->request->getBody());
-        $usuario = UsuarioController::Logeo($datosRecibidos->Mail, $pdo);
+        $usuario = UsuarioController::Login($datosRecibidos->Mail, $pdo);
 
         if ($usuario == null){
             $respuesta = false;

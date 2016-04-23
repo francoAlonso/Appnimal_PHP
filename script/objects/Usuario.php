@@ -49,6 +49,19 @@ class Usuario{
 		
 	}//obtenerPorId
 
+	public static function ObtenerPorMail($mail, $pdo){
+		$params = array(':MAIL' => $mail);
+		$statement = $pdo->prepare('
+			SELECT *
+			FROM Usuario
+			WHERE Mail = :MAIL
+			AND Habilitado = 1
+			LIMIT 0,1');
+		$statement->execute($params);
+		$statement->setFetchMode(PDO::FETCH_CLASS, 'Usuario');
+		return $statement->fetch();
+	}
+
 	public static function CrearUsuario($mail, $pdo){
 
 		$params = array(':Mail' => $mail, ':Habilitado' => true);
